@@ -11,10 +11,16 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    public static final int QUANTITY_MIN = 0;
+    public static final int QUANTITY_MAX = 10;
+    public static final int COFFEE_PRICE = 3000;
 
     private Button mMinusButton;
     private Button mPlusButton;
     private TextView mQuantityTextView;
+    private TextView mResultTextView;
+    private Button mOrderButton;
+
     private int mQuantity;
 
     @Override
@@ -30,18 +36,49 @@ public class MainActivity extends AppCompatActivity {
         mMinusButton = findViewById(R.id.minus_button);
         mPlusButton = findViewById(R.id.plus_button);
         mQuantityTextView = findViewById(R.id.quantity_text);
+        mResultTextView = findViewById(R.id.result_text);
+        mOrderButton = findViewById(R.id.order_button);
 
         mMinusButton.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
                                                 Log.d(TAG, "마이너스 버튼 클릭");
-                                                Log.v(TAG, "일반로그");
-                                                Log.e(TAG, "에러로그");
-                                                Log.i(TAG, "정보로그");
-                                                Log.w(TAG, "경고로그");
+                                                mQuantity--;
+                                                if (mQuantity < QUANTITY_MIN) {
+                                                    mQuantity = 0;
+                                                }
+                                                displayResult();
                                             }
                                         }
         );
+        mPlusButton.setOnClickListener(new View.OnClickListener() {
+                                           @Override
+                                           public void onClick(View v) {
+                                               Log.d(TAG, "플러스 버튼 클릭");
+                                               mQuantity++;
+                                               if (mQuantity > QUANTITY_MAX) {
+                                                   mQuantity = 10;
+                                               }
+                                               displayResult();
+                                           }
+                                       }
+        );
+        mOrderButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Log.d(TAG, "오더 버튼 클릭");
+                                                String message = mResultTextView.getText().toString();
+                                                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+        );
+    }
+
+    private void displayResult() {
+        mQuantityTextView.setText("" + mQuantity);
+        int price = COFFEE_PRICE;
+        String result = "가격 : " + (price * mQuantity) + "원\n감사합니다";
+        mResultTextView.setText(result);
     }
 
     private void init() {
